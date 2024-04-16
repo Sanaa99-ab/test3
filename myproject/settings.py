@@ -24,8 +24,28 @@ SECRET_KEY = 'django-insecure-d#1-mj8(pjtj#qd2(ertgo&$3duth!z-uzw3o=j@6cm^pdm3me
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+# settings.py
 
-ALLOWED_HOSTS = ["test3.1fn9kd83ysbj.eu-gb.codeengine.appdomain.cloud"]
+import os
+
+# Determine allowed hosts based on the incoming host header
+def get_allowed_hosts():
+    # Get the host header from the environment variable
+    host_header = os.environ.get('HOST_HEADER', '')
+
+    # Split the host header by comma if it contains multiple hosts
+    hosts = [host.strip() for host in host_header.split(',')]
+
+    # If the host header is empty or contains '*', allow all hosts
+    if not host_header or '*' in hosts:
+        return ['*']
+    else:
+        return hosts
+
+# Set ALLOWED_HOSTS dynamically based on the incoming host header
+ALLOWED_HOSTS = get_allowed_hosts()
+
+#ALLOWED_HOSTS = ["test3.1fn9kd83ysbj.eu-gb.codeengine.appdomain.cloud"]
 
 
 # Application definition
